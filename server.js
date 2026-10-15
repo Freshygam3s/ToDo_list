@@ -132,6 +132,8 @@ app.post('/api/register', async (req, res) => {
   else if (!isEmail(email)) errors.email = 'E-pasta adrese nav pareiza.';
   else if (await queryOne('SELECT id FROM users WHERE email = ?', [email])) errors.email = 'Šis e-pasts jau ir reģistrēts.';
   if (password.length < 8) errors.password = 'Parolei jābūt vismaz 8 zīmes garai.';
+  else if (!/\d/.test(password)) errors.password = 'Parolē jābūt vismaz vienam ciparam.';
+  else if (!/[^A-Za-z0-9\s]/.test(password)) errors.password = 'Parolē jābūt vismaz vienam simbolam (piemēram, ! ? # $).';
   else if (password.length > 128) errors.password = 'Parole var būt ne garāka par 128 zīmēm.';
   checkFields(errors);
 
