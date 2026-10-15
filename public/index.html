@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plānotājs</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div id="app"><p class="loading">Ielādē...</p></div>
+
+  <dialog id="task-dialog">
+    <form id="task-form" novalidate>
+      <h2 id="task-dialog-title">Jauns uzdevums</h2>
+      <p class="form-error" data-error="form"></p>
+
+      <label>Nosaukums
+        <input name="title" maxlength="200" required>
+      </label>
+      <small class="field-error" data-error="title"></small>
+
+      <label>Apraksts
+        <textarea name="description" rows="4" maxlength="5000"></textarea>
+      </label>
+      <small class="field-error" data-error="description"></small>
+
+      <div class="row">
+        <div>
+          <label>Termiņš
+            <input name="dueDate" type="date">
+          </label>
+          <small class="field-error" data-error="dueDate"></small>
+        </div>
+        <div>
+          <label>Prioritāte
+            <select name="priority">
+              <option value="low">Zema</option>
+              <option value="medium" selected>Vidēja</option>
+              <option value="high">Augsta</option>
+            </select>
+          </label>
+          <small class="field-error" data-error="priority"></small>
+        </div>
+      </div>
+
+      <div id="assignee-field">
+        <label>Atbildīgais
+          <select name="assigneeId"></select>
+        </label>
+        <small class="field-error" data-error="assigneeId"></small>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="secondary" data-close>Atcelt</button>
+        <button type="submit">Saglabāt</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="project-dialog">
+    <form id="project-form" novalidate>
+      <h2>Labot projektu</h2>
+      <p class="form-error" data-error="form"></p>
+      <label>Nosaukums
+        <input name="name" maxlength="100" required>
+      </label>
+      <small class="field-error" data-error="name"></small>
+      <label>Apraksts
+        <textarea name="description" rows="3" maxlength="2000"></textarea>
+      </label>
+      <small class="field-error" data-error="description"></small>
+      <div class="buttons">
+        <button type="button" class="secondary" data-close>Atcelt</button>
+        <button type="submit">Saglabāt</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="message" role="status" aria-live="polite"></div>
+  <noscript>Plānotājam nepieciešams JavaScript.</noscript>
+</body>
+</html>

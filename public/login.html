@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pieslēgties | Plānotājs</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <div class="auth">
+    <h1>Plānotājs</h1>
+    <form id="login-form" class="box" novalidate>
+      <h2>Pieslēgties</h2>
+      <p class="form-error" data-error="form"></p>
+      <label>E-pasts <input name="email" type="email" autocomplete="email" required autofocus></label>
+      <small class="field-error" data-error="email"></small>
+      <label>Parole <input name="password" type="password" autocomplete="current-password" required></label>
+      <small class="field-error" data-error="password"></small>
+      <button type="submit">Pieslēgties</button>
+      <p>Nav konta? <a href="register.html">Reģistrēties</a></p>
+    </form>
+  </div>
+</body>
+</html>
