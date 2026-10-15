@@ -137,6 +137,7 @@ function layout(content) {
       <div class="user">
         ${esc(me.name)}
         <button class="secondary small" id="logout">Iziet</button>
+        <button class="delete" id="delete-account" title="Izdzēst kontu">Izdzēst kontu</button>
       </div>
     </header>
     <main>${content}</main>`;

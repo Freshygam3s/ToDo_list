@@ -175,3 +175,13 @@ dialog h2 { margin-top: 0; }
   #task-dialog, #project-dialog, #person-dialog { background: #1d1e22; color: #ddd; border: 1px solid #555; }
   input, select, textarea { background: #333; color: #ddd; border: 1px solid #555; }
 }
+
+.delete {
+  color: #c0392b;
+  border-color: #c0392b;
+  background: #fff;
+  padding: 3px 8px;
+  font-size: 13px;
+}
+
+.delete:hover { background: #ffb0b0; }
