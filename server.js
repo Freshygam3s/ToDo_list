@@ -168,6 +168,15 @@ app.post('/api/logout', (req, res, next) => {
   });
 });
 
+// izdzēš kontu; viņa uzdevumi, projekti (kur viņš ir īpašnieks), dalība un uzaicinājumi izdzēšas līdzi (ON DELETE CASCADE)
+app.delete('/api/me', needLogin, async (req, res, next) => {
+  await query('DELETE FROM users WHERE id = ?', [req.user.id]);
+  req.session.destroy((err) => {
+    if (err) return next(err);
+    res.clearCookie('planotajs').json({ ok: true });
+  });
+});
+
 // uzdevumi
 
 // uzdevums + projekta nosaukums, atbildīgā un autora vārds un mana loma projektā

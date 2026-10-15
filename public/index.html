@@ -78,6 +78,17 @@
     </form>
   </dialog>
 
+  <dialog id="delete-dialog">
+    <h2>Izdzēst kontu?</h2>
+    <p>Tiks izdzēsti arī visi jūsu uzdevumi un projekti, kuros jūs esat īpašnieks.</p>
+    <p><b>Šo darbību nevar atsaukt.</b></p>
+    <p class="form-error" id="delete-error"></p>
+    <div class="buttons">
+      <button type="button" class="secondary" data-close>Atcelt</button>
+      <button type="button" class="danger" id="confirm-delete">Jā, izdzēst kontu</button>
+    </div>
+  </dialog>
+
   <div id="message" role="status" aria-live="polite"></div>
   <noscript>Plānotājam nepieciešams JavaScript.</noscript>
 </body>

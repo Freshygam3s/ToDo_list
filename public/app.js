@@ -148,6 +148,12 @@ function layout(content) {
     location.href = 'login.html';
   });
 
+  // Konta dzēšanas pogas Notikumu klausītājs
+  app.querySelector('#delete-account').addEventListener('click', () => {
+    document.querySelector('#delete-error').textContent = '';
+    document.querySelector('#delete-dialog').showModal();
+  });
+
   // Tumšā režīma pārslēdzēja notikumu klausītājs (piesaistīts no jauna katrā renderēšanas reizē)
   const darkModeToggle = app.querySelector('#dark-mode-toggle');
   if (darkModeToggle) {
@@ -351,6 +357,19 @@ taskForm.addEventListener('submit', async (event) => {
 
 document.querySelectorAll('dialog [data-close]').forEach((button) =>
   button.addEventListener('click', () => button.closest('dialog').close()));
+
+// konta dzēšanas apstiprināšanas logs
+document.querySelector('#confirm-delete').addEventListener('click', async (event) => {
+  const button = event.currentTarget;
+  button.disabled = true;
+  try {
+    await api('DELETE', '/me');
+    location.href = 'login.html';
+  } catch (error) {
+    document.querySelector('#delete-error').textContent = error.message;
+    button.disabled = false;
+  }
+});
 
 // pārskats
 
