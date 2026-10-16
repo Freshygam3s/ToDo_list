@@ -1,8 +1,3 @@
-// uzdevumu saraksts, filtri un uzdevuma forma
-
-// uzdevumu saraksts (izmanto gan pārskats, gan projekta lapa)
-
-// choice: show (active vai done), priority, sort un assignee
 function filterTasks(tasks, choice) {
   const list = tasks.filter((task) => {
     if (choice.show === 'active' && task.completed) return false;
@@ -93,7 +88,6 @@ function taskList(tasks, options) {
   return `<ul class="tasks">${tasks.map((task) => taskItem(task, options)).join('')}</ul>`;
 }
 
-// pabeigt, labot un dzēst pogas; reload() ielādē lapu no jauna
 function listenToTasks(box, tasks, reload, members) {
   const find = (id) => tasks.find((task) => task.id === Number(id));
 
@@ -126,13 +120,10 @@ function listenToTasks(box, tasks, reload, members) {
     }));
 }
 
-// uzdevuma forma
-
 const taskDialog = document.querySelector('#task-dialog');
 const taskForm = document.querySelector('#task-form');
 let saveTask = null;
 
-// ja task nav padots, tad veido jaunu; members padod tikai projekta uzdevumiem
 function openTaskForm({ task = null, projectId = null, members = null, onSaved }) {
   taskForm.reset();
   clearErrors(taskForm);
@@ -144,7 +135,6 @@ function openTaskForm({ task = null, projectId = null, members = null, onSaved }
   fields.dueDate.value = task?.dueDate ?? '';
   fields.priority.value = task?.priority ?? 'medium';
 
-  // atbildīgo var izvēlēties tikai projektā
   document.querySelector('#assignee-field').hidden = !members;
   if (members) {
     fields.assigneeId.innerHTML = '<option value="">Nav piešķirts</option>' +

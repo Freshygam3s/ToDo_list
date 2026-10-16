@@ -19,8 +19,6 @@ small { color: #777; }
 a:-webkit-any-link { text-decoration: none; }
 nav a { border: 1px solid #ffffff; padding: 6px 12px; border-radius: 6px; }
 
-/* galvene */
-
 header {
   display: flex;
   flex-wrap: wrap;
@@ -60,8 +58,6 @@ main { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 .stats b.late { color: #c0392b; }
 .description { margin: 4px 0; color: #555; white-space: pre-wrap; overflow-wrap: anywhere; }
 .info { font-size: 13px; color: #777; }
-
-/* pogas un formas */
 
 button {
   padding: 6px 12px;
@@ -106,8 +102,6 @@ details summary { cursor: pointer; font-weight: bold; }
 .auth h1 { text-align: center; }
 .auth button[type=submit] { width: 100%; margin-top: 15px; }
 
-/* uzdevumi */
-
 .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .filters select { width: auto; margin: 0; }
 
@@ -125,8 +119,6 @@ details summary { cursor: pointer; font-weight: bold; }
 .late { color: #c0392b; font-weight: bold; }
 .people li { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .people small { display: block; }
-
-/* logi un ziņa apakšā */
 
 dialog { width: 480px; max-width: calc(100% - 30px); border: 1px solid #999; padding: 20px; }
 dialog h2 { margin-top: 0; }

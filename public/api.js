@@ -1,6 +1,3 @@
-// visi pieprasījumi serverim iet caur šo funkciju
-
-// pieprasījums serverim, kļūdas gadījumā error.fields satur kļūdas pie laukiem
 async function api(method, url, body) {
   let response;
   try {
@@ -17,7 +14,6 @@ async function api(method, url, body) {
     const error = new Error(data.error || 'Kaut kas nogāja greizi.');
     error.fields = data.fields || null;
     error.status = response.status;
-    // sesija beigusies, atpakaļ uz pieslēgšanos
     if (response.status === 401) location.href = 'login.html';
     throw error;
   }

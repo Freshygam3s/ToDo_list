@@ -1,5 +1,3 @@
-// savienojums ar MySQL un tabulas
-
 import mysql from 'mysql2/promise';
 import config from './config.js';
 
@@ -19,7 +17,6 @@ export async function queryOne(sql, values = []) {
   return rows[0] ?? null;
 }
 
-// vai nu izdodas visi vaicājumi, vai neviens
 export async function transaction(work) {
   const conn = await pool.getConnection();
   try {
@@ -58,7 +55,6 @@ const tables = [
     FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
   )`,
 
-  // kas ir projektā: owner (īpašnieks) vai member (dalībnieks)
   `CREATE TABLE IF NOT EXISTS project_members (
     project_id INT UNSIGNED NOT NULL,
     user_id    INT UNSIGNED NOT NULL,
@@ -84,7 +80,6 @@ const tables = [
     FOREIGN KEY (invitee_id) REFERENCES users (id)    ON DELETE CASCADE
   )`,
 
-  // personīgajam uzdevumam project_id ir NULL
   `CREATE TABLE IF NOT EXISTS tasks (
     id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
     created_by   INT UNSIGNED NOT NULL,
@@ -104,7 +99,6 @@ const tables = [
     FOREIGN KEY (assignee_id) REFERENCES users (id)    ON DELETE SET NULL
   )`,
 
-  // pieslēgšanās sesijas
   `CREATE TABLE IF NOT EXISTS sessions (
     session_id VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
     expires    INT UNSIGNED NOT NULL,

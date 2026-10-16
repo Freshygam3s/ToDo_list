@@ -1,8 +1,5 @@
-// galvenais fails: kopīgie mainīgie, galvene, tumšais režīms un lapu pārslēgšana
-// jāielādē pēdējam (sk. index.html)
-
 const app = document.querySelector('#app');
-let me = null; // pieslēgušais lietotājs { id, name, email }
+let me = null;
 let invitationCount = 0;
 
 function layout(content) {
@@ -62,12 +59,9 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// logu aizvēršanas pogas
-
 document.querySelectorAll('dialog [data-close]').forEach((button) =>
   button.addEventListener('click', () => button.closest('dialog').close()));
 
-// konta dzēšanas apstiprināšanas logs
 document.querySelector('#confirm-delete').addEventListener('click', async (event) => {
   const button = event.currentTarget;
   button.disabled = true;
@@ -79,8 +73,6 @@ document.querySelector('#confirm-delete').addEventListener('click', async (event
     button.disabled = false;
   }
 });
-
-// lapas
 
 const pages = [
   [/^#\/$/, homePage],
@@ -101,7 +93,6 @@ async function showPage() {
     return;
   }
 
-  // nav pieslēdzies, ejam uz login.html
   if (!me) return (location.href = 'login.html');
 
   for (const [pattern, page] of pages) {

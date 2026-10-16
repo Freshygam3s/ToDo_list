@@ -1,7 +1,3 @@
-// lapas: pārskats, projekti, viens projekts, uzaicinājumi
-
-// pārskats
-
 const homeChoice = { show: 'active', priority: '', sort: 'date' };
 
 async function homePage() {
@@ -56,8 +52,6 @@ async function homePage() {
   };
   draw();
 }
-
-// projekti
 
 async function projectsPage() {
   const main = layout('<p class="loading">Ielādē...</p>');
@@ -201,7 +195,6 @@ async function projectPage(id) {
     return;
   }
 
-  // tālāk viss ir tikai īpašniekam
   const projectDialog = document.querySelector('#project-dialog');
   const projectForm = document.querySelector('#project-form');
 
@@ -270,8 +263,6 @@ async function projectPage(id) {
       reload();
     }));
 }
-
-// uzaicinājumi
 
 async function invitationsPage() {
   const main = layout('<p class="loading">Ielādē...</p>');

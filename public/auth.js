@@ -1,8 +1,5 @@
-// login.html un register.html
-
 if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
 
-// ja jau ir pieslēdzies, uzreiz uz sākumlapu
 fetch('/api/me')
   .then((response) => response.json())
   .then((data) => {

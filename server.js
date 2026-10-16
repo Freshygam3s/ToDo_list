@@ -1,4 +1,3 @@
-// Plānotāja serveris. Palaist ar: node server.js
 import bcrypt from 'bcryptjs';
 import express from 'express';
 import session from 'express-session';
@@ -9,7 +8,6 @@ import { createTables, pool, query, queryOne, transaction } from './db.js';
 const app = express();
 const MySQLStore = mysqlSession(session);
 
-// kļūda, ko var parādīt lietotājam (fields ir kļūdas pie formas laukiem)
 class UserError extends Error {
   constructor(message, fields = null, status = 400) {
     super(message);
@@ -22,7 +20,6 @@ const notFound = (what) => new UserError(`${what} nav atrasts.`, null, 404);
 const forbidden = () => new UserError('Jums nav tiesību to darīt.', null, 403);
 
 const clean = (value) => (typeof value === 'string' ? value.trim() : '');
-// id no adreses: tikai vesels skaitlis, citādi 0
 const toId = (value) => (/^\d{1,10}$/.test(String(value)) ? Number(value) : 0);
 const PRIORITIES = ['low', 'medium', 'high'];
 
@@ -41,7 +38,6 @@ function checkFields(errors) {
   if (Object.keys(errors).length) throw new UserError('Lūdzu, izlabojiet kļūdas formā.', errors);
 }
 
-// lai nevar minēt paroles: max 20 mēģinājumi 15 minūtēs no vienas IP
 const attempts = new Map();
 function limitAttempts(req) {
   const now = Date.now();
@@ -78,14 +74,12 @@ app.use(session({
   cookie: { httpOnly: true, sameSite: 'strict' },
 }));
 
-// CSRF: sīkfails ir sameSite, un visiem izmaiņu pieprasījumiem jābūt ar mūsu galveni
 app.use('/api', (req, res, next) => {
   if (req.method !== 'GET' && req.get('X-Requested-With') !== 'planotajs') return next(forbidden());
   res.set('Cache-Control', 'no-store');
   next();
 });
 
-// laiž tālāk tikai pieslēgušos, req.user = { id, name, email }
 async function needLogin(req, res, next) {
   const user = req.session.userId
     ? await queryOne('SELECT id, name, email FROM users WHERE id = ?', [req.session.userId])
@@ -99,7 +93,6 @@ async function needLogin(req, res, next) {
 }
 
 function startSession(req, userId) {
-  // pēc pieslēgšanās jauns sesijas id
   return new Promise((resolve, reject) => {
     req.session.regenerate((err) => {
       if (err) return reject(err);
@@ -108,8 +101,6 @@ function startSession(req, userId) {
     });
   });
 }
-
-// konts
 
 app.get('/api/me', async (req, res) => {
   const user = req.session.userId
@@ -137,7 +128,6 @@ app.post('/api/register', async (req, res) => {
   else if (password.length > 128) errors.password = 'Parole var būt ne garāka par 128 zīmēm.';
   checkFields(errors);
 
-  // paroli glabājam tikai kā bcrypt hash
   const hash = await bcrypt.hash(password, 12);
   const result = await query('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)', [name, email, hash]);
   await startSession(req, result.insertId);
@@ -155,7 +145,6 @@ app.post('/api/login', async (req, res) => {
   checkFields(errors);
 
   const user = await queryOne('SELECT id, name, email, password_hash FROM users WHERE email = ?', [email]);
-  // viena un tā pati kļūda, lai nevar uzzināt, vai tāds lietotājs eksistē
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     throw new UserError('Nepareizs e-pasts vai parole.', null, 401);
   }
@@ -170,7 +159,6 @@ app.post('/api/logout', (req, res, next) => {
   });
 });
 
-// izdzēš kontu; viņa uzdevumi, projekti (kur viņš ir īpašnieks), dalība un uzaicinājumi izdzēšas līdzi (ON DELETE CASCADE)
 app.delete('/api/me', needLogin, async (req, res, next) => {
   await query('DELETE FROM users WHERE id = ?', [req.user.id]);
   req.session.destroy((err) => {
@@ -179,10 +167,6 @@ app.delete('/api/me', needLogin, async (req, res, next) => {
   });
 });
 
-// uzdevumi
-
-// uzdevums + projekta nosaukums, atbildīgā un autora vārds un mana loma projektā
-// pirmais ? vienmēr ir mans id
 const TASK_SQL = `
   SELECT t.*, p.name AS project_name, a.name AS assignee_name, c.name AS creator_name, m.role AS my_role
     FROM tasks t
@@ -193,8 +177,6 @@ const TASK_SQL = `
 
 const TASK_ORDER = "ORDER BY t.completed, t.due_date IS NULL, t.due_date, FIELD(t.priority, 'high', 'medium', 'low'), t.id DESC";
 
-// personīgo uzdevumu var mainīt tikai autors
-// projektā labot un atzīmēt var jebkurš dalībnieks, bet dzēst tikai īpašnieks vai uzdevuma autors
 function rights(task, userId) {
   if (task.project_id === null) {
     const mine = task.created_by === userId;
@@ -220,7 +202,6 @@ function taskJson(task, userId) {
   };
 }
 
-// atrod uzdevumu, ja to drīkst redzēt, citādi 404
 async function findTask(id, userId) {
   const task = await queryOne(`${TASK_SQL} WHERE t.id = ?`, [userId, id]);
   const visible = task && (task.project_id === null ? task.created_by === userId : task.my_role !== null);
@@ -228,7 +209,6 @@ async function findTask(id, userId) {
   return task;
 }
 
-// pārbauda uzdevuma formu
 function readTaskForm(body) {
   const title = clean(body.title);
   const description = clean(body.description);
@@ -245,7 +225,6 @@ function readTaskForm(body) {
   return { title, description, dueDate, priority };
 }
 
-// atbildīgajam jābūt projekta dalībniekam (vai nevienam)
 async function readAssignee(value, projectId) {
   if (value === null || value === undefined || value === '') return null;
   const id = toId(value);
@@ -254,7 +233,6 @@ async function readAssignee(value, projectId) {
   return id;
 }
 
-// mani uzdevumi un projektos man piešķirtie
 app.get('/api/tasks', needLogin, async (req, res) => {
   const me = req.user.id;
   const personal = await query(`${TASK_SQL} WHERE t.project_id IS NULL AND t.created_by = ? ${TASK_ORDER}`, [me, me]);
@@ -265,7 +243,6 @@ app.get('/api/tasks', needLogin, async (req, res) => {
   });
 });
 
-// ja ir projectId, tad tas ir projekta uzdevums
 app.post('/api/tasks', needLogin, async (req, res) => {
   const me = req.user.id;
   const form = readTaskForm(req.body);
@@ -287,7 +264,6 @@ app.post('/api/tasks', needLogin, async (req, res) => {
   res.status(201).json({ task: taskJson(await findTask(result.insertId, me), me) });
 });
 
-// ja atsūta tikai { completed }, tad tikai atzīmē kā pabeigtu vai nepabeigtu
 app.put('/api/tasks/:id', needLogin, async (req, res) => {
   const me = req.user.id;
   const task = await findTask(toId(req.params.id), me);
@@ -303,7 +279,6 @@ app.put('/api/tasks/:id', needLogin, async (req, res) => {
   } else {
     if (!canEdit) throw forbidden();
     const form = readTaskForm(req.body);
-    // ja formā nav atbildīgā lauka (piem. labojot no pārskata), atbildīgais paliek tas pats
     const assigneeId = task.project_id && req.body.assigneeId !== undefined
       ? await readAssignee(req.body.assigneeId, task.project_id)
       : task.assignee_id;
@@ -322,14 +297,11 @@ app.delete('/api/tasks/:id', needLogin, async (req, res) => {
   res.json({ ok: true });
 });
 
-// projekti
-
 async function memberRole(projectId, userId) {
   const row = await queryOne('SELECT role FROM project_members WHERE project_id = ? AND user_id = ?', [projectId, userId]);
   return row?.role ?? null;
 }
 
-// projekts, kurā esmu dalībnieks, citādi 404
 async function findProject(id, userId) {
   const project = await queryOne(
     `SELECT p.id, p.name, p.description, m.role AS my_role
@@ -377,7 +349,6 @@ app.post('/api/projects', needLogin, async (req, res) => {
   res.status(201).json({ project: { id } });
 });
 
-// viss projekta lapai (uzaicinājumus redz tikai īpašnieks)
 app.get('/api/projects/:id', needLogin, async (req, res) => {
   const me = req.user.id;
   const project = await findProject(toId(req.params.id), me);
@@ -412,7 +383,6 @@ app.put('/api/projects/:id', needLogin, async (req, res) => {
   res.json({ ok: true });
 });
 
-// uzdevumi, dalībnieki un uzaicinājumi izdzēšas līdzi (ON DELETE CASCADE)
 app.delete('/api/projects/:id', needLogin, async (req, res) => {
   const project = await findProject(toId(req.params.id), req.user.id);
   if (project.my_role !== 'owner') throw forbidden();
@@ -420,7 +390,6 @@ app.delete('/api/projects/:id', needLogin, async (req, res) => {
   res.json({ ok: true });
 });
 
-// īpašnieks uzaicina citu reģistrētu lietotāju
 app.post('/api/projects/:id/invitations', needLogin, async (req, res) => {
   const project = await findProject(toId(req.params.id), req.user.id);
   if (project.my_role !== 'owner') throw forbidden();
@@ -442,7 +411,6 @@ app.post('/api/projects/:id/invitations', needLogin, async (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-// atsaukt uzaicinājumu
 app.delete('/api/projects/:id/invitations/:invitationId', needLogin, async (req, res) => {
   const project = await findProject(toId(req.params.id), req.user.id);
   if (project.my_role !== 'owner') throw forbidden();
@@ -454,7 +422,6 @@ app.delete('/api/projects/:id/invitations/:invitationId', needLogin, async (req,
   res.json({ ok: true });
 });
 
-// īpašnieks izņem kādu, vai dalībnieks pats aiziet
 app.delete('/api/projects/:id/members/:userId', needLogin, async (req, res) => {
   const project = await findProject(toId(req.params.id), req.user.id);
   const userId = toId(req.params.userId);
@@ -467,13 +434,10 @@ app.delete('/api/projects/:id/members/:userId', needLogin, async (req, res) => {
 
   await transaction(async (run) => {
     await run('DELETE FROM project_members WHERE project_id = ? AND user_id = ?', [project.id, userId]);
-    // viņa uzdevumi paliek, tikai bez atbildīgā
     await run('UPDATE tasks SET assignee_id = NULL WHERE project_id = ? AND assignee_id = ?', [project.id, userId]);
   });
   res.json({ ok: true });
 });
-
-// uzaicinājumi
 
 async function countInvitations(userId) {
   const row = await queryOne("SELECT COUNT(*) AS count FROM invitations WHERE invitee_id = ? AND status = 'pending'", [userId]);
@@ -517,8 +481,6 @@ app.post('/api/invitations/:id/decline', needLogin, async (req, res) => {
   res.json({ ok: true });
 });
 
-// kļūdas
-
 app.use('/api', (req, res) => {
   res.status(404).json({ error: 'Šāda adrese neeksistē.' });
 });
@@ -532,8 +494,6 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Servera kļūda. Lūdzu, mēģiniet vēlreiz.' });
 });
-
-// palaišana
 
 try {
   await createTables();

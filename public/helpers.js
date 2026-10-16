@@ -1,5 +1,3 @@
-// mazas palīgfunkcijas, ko izmanto pārējie faili
-
 // No XSS for you
 
 function esc(value) {
@@ -14,13 +12,11 @@ function esc(value) {
 const PRIORITY_NAMES = { high: 'Augsta', medium: 'Vidēja', low: 'Zema' };
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 
-// šodienas datums tādā pašā formā kā dueDate, lai var salīdzināt
 function today() {
   const now = new Date();
   return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 }
 
-// datums kā dd.mm.gggg
 function showDate(date) {
   return date ? date.split('-').reverse().join('.') : '';
 }
@@ -51,7 +47,6 @@ function askConfirm(title, text, buttonText) {
   });
 }
 
-// parāda kļūdas pie formas laukiem
 function showErrors(form, error) {
   clearErrors(form);
   const fields = error.fields || {};
