@@ -130,8 +130,8 @@ details summary { cursor: pointer; font-weight: bold; }
 
 dialog { width: 480px; max-width: calc(100% - 30px); border: 1px solid #999; padding: 20px; }
 dialog h2 { margin-top: 0; }
-#delete-dialog, #project-delete-dialog { width: 400px; }
-#delete-dialog::backdrop, #project-delete-dialog::backdrop { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); }
+#delete-dialog, #project-delete-dialog, #confirm-dialog { width: 400px; }
+#delete-dialog::backdrop, #project-delete-dialog::backdrop, #confirm-dialog::backdrop { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); }
 
 #message {
   display: none;
@@ -174,7 +174,7 @@ dialog h2 { margin-top: 0; }
   small { color: #999; }
   a { color: #ffffff; text-decoration: none; }
   .dark-mode-toggle { background: #333; color: #fff; }
-  #task-dialog, #project-dialog, #person-dialog, #delete-dialog, #project-delete-dialog { background: #1d1e22; color: #ddd; border: 1px solid #555; }
+  #task-dialog, #project-dialog, #person-dialog, #delete-dialog, #project-delete-dialog, #confirm-dialog { background: #1d1e22; color: #ddd; border: 1px solid #555; }
   input, select, textarea { background: #333; color: #ddd; border: 1px solid #555; }
 }
 
