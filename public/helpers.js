@@ -36,6 +36,21 @@ function showMessage(text) {
   messageTimer = setTimeout(() => box.classList.remove('show'), 3000);
 }
 
+// apstiprināšanas logs alert/confirm vietā; atgriež true, ja lietotājs apstiprina
+function askConfirm(title, text, buttonText) {
+  const dialog = document.querySelector('#confirm-dialog');
+  dialog.querySelector('#confirm-title').textContent = title;
+  dialog.querySelector('#confirm-text').textContent = text;
+  dialog.querySelector('#confirm-yes').textContent = buttonText;
+  dialog.returnValue = '';
+  dialog.showModal();
+
+  return new Promise((resolve) => {
+    dialog.querySelector('#confirm-yes').onclick = () => dialog.close('yes');
+    dialog.addEventListener('close', () => resolve(dialog.returnValue === 'yes'), { once: true });
+  });
+}
+
 // parāda kļūdas pie formas laukiem
 function showErrors(form, error) {
   clearErrors(form);
