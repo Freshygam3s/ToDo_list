@@ -193,7 +193,7 @@ async function projectPage(id) {
 
   if (!isOwner) {
     main.querySelector('#leave-project').addEventListener('click', async () => {
-      if (!confirm(`Pamest projektu "${project.name}"?`)) return;
+      if (!(await askConfirm('Pamest projektu?', `Jūs pametīsiet projektu "${project.name}".`, 'Jā, pamest'))) return;
       await api('DELETE', `/projects/${project.id}/members/${me.id}`);
       showMessage('Jūs pametāt projektu.');
       location.hash = '#/projekti';
@@ -264,7 +264,7 @@ async function projectPage(id) {
 
   main.querySelectorAll('[data-remove]').forEach((button) =>
     button.addEventListener('click', async () => {
-      if (!confirm(`Izņemt ${button.dataset.name} no projekta?`)) return;
+      if (!(await askConfirm('Izņemt dalībnieku?', `${button.dataset.name} tiks izņemts no projekta.`, 'Jā, izņemt'))) return;
       await api('DELETE', `/projects/${project.id}/members/${button.dataset.remove}`);
       showMessage('Dalībnieks izņemts.');
       reload();
