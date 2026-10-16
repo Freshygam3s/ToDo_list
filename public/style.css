@@ -138,11 +138,43 @@ dialog h2 { margin-top: 0; }
 #message.show { display: block; }
 
 @media (max-width: 600px) {
-  header { padding: 10px 15px; }
+  header { padding: 10px 12px; gap: 8px; }
+  .logo { order: 1; }
+  .dark-mode-toggle { order: 2; margin-left: auto; padding: 4px 10px; font-size: 13px; }
+  nav { order: 3; display: flex; gap: 6px; width: 100%; }
+  nav a { flex: 1; margin-right: 0; padding: 8px 4px; text-align: center; font-size: 14px; }
+  .user { order: 4; display: flex; align-items: center; gap: 6px; width: 100%; margin-left: 0; font-size: 14px; }
+  .user #logout { margin-left: auto; }
+  .user button { padding: 6px 10px; }
+
+  main { margin: 12px auto; padding: 0 10px; }
+  h1 { font-size: 21px; }
+  .box { padding: 12px; }
+  .page-top > button, .page-top > div { width: 100%; }
+  .page-top > button { padding: 10px; }
+
+  .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stats b { font-size: 22px; }
+
+  input, select, textarea { font-size: 16px; padding: 8px; }
   .row { flex-direction: column; gap: 0; }
-  .stats { grid-template-columns: 1fr 1fr; }
+  .buttons { display: flex; gap: 8px; }
+  .buttons button { flex: 1; padding: 10px; }
+
+  .filters button, .filters select { flex: 1 1 40%; }
+  .filters button { padding: 8px; }
+
   .task { flex-wrap: wrap; }
-  .task-buttons { width: 100%; padding-left: 28px; }
+  .task input[type=checkbox], .no-check { width: 22px; height: 22px; }
+  .task-buttons { display: flex; gap: 8px; width: 100%; padding-left: 32px; }
+  .task-buttons button.small { flex: 1; padding: 8px; font-size: 14px; }
+
+  .people li { flex-wrap: wrap; }
+  .inline-form { flex-direction: column; }
+  .inline-form button { padding: 10px; }
+
+  dialog { padding: 15px; }
+  #message { width: calc(100% - 30px); bottom: 12px; text-align: center; }
 }
 
 .dark-mode-toggle {
