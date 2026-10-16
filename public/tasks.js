@@ -115,7 +115,7 @@ function listenToTasks(box, tasks, reload, members) {
   box.querySelectorAll('[data-delete]').forEach((button) =>
     button.addEventListener('click', async () => {
       const task = find(button.dataset.delete);
-      if (!confirm(`Dzēst uzdevumu "${task.title}"?`)) return;
+      if (!(await askConfirm('Dzēst uzdevumu?', `Uzdevums "${task.title}" tiks izdzēsts.`, 'Jā, dzēst'))) return;
       try {
         await api('DELETE', `/tasks/${task.id}`);
         showMessage('Uzdevums dzēsts.');
