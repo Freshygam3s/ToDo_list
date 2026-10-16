@@ -193,12 +193,16 @@ const TASK_SQL = `
 
 const TASK_ORDER = "ORDER BY t.completed, t.due_date IS NULL, t.due_date, FIELD(t.priority, 'high', 'medium', 'low'), t.id DESC";
 
-// personīgo uzdevumu var mainīt tikai autors, projekta uzdevumu jebkurš projekta dalībnieks
+// personīgo uzdevumu var mainīt tikai autors
+// projektā labot un atzīmēt var jebkurš dalībnieks, bet dzēst tikai īpašnieks vai uzdevuma autors
 function rights(task, userId) {
-  const allowed = task.project_id === null
-    ? task.created_by === userId
-    : task.my_role === 'owner' || task.my_role === 'member';
-  return { canEdit: allowed, canComplete: allowed };
+  if (task.project_id === null) {
+    const mine = task.created_by === userId;
+    return { canEdit: mine, canComplete: mine, canDelete: mine };
+  }
+  const member = task.my_role === 'owner' || task.my_role === 'member';
+  const canDelete = task.my_role === 'owner' || (member && task.created_by === userId);
+  return { canEdit: member, canComplete: member, canDelete };
 }
 
 function taskJson(task, userId) {
@@ -313,7 +317,7 @@ app.put('/api/tasks/:id', needLogin, async (req, res) => {
 
 app.delete('/api/tasks/:id', needLogin, async (req, res) => {
   const task = await findTask(toId(req.params.id), req.user.id);
-  if (!rights(task, req.user.id).canEdit) throw forbidden();
+  if (!rights(task, req.user.id).canDelete) throw forbidden();
   await query('DELETE FROM tasks WHERE id = ?', [task.id]);
   res.json({ ok: true });
 });

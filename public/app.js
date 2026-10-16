@@ -29,7 +29,6 @@ function layout(content) {
     </header>
     <main>${content}</main>`;
 
-  // Izlogošanās pogas Notikumu klausītājs
   app.querySelector('#logout').addEventListener('click', async () => {
     await api('POST', '/logout').catch(() => {});
     location.href = 'login.html';

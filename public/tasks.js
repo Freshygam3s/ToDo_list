@@ -80,10 +80,10 @@ function taskItem(task, { showProject = false } = {}) {
         ${task.description ? `<p class="description">${esc(task.description)}</p>` : ''}
         <div class="info">${info.join(', ')}</div>
       </div>
-      ${task.canEdit ? `
+      ${task.canEdit || task.canDelete ? `
       <div class="task-buttons">
-        <button class="secondary small" data-edit="${task.id}">Labot</button>
-        <button class="danger small" data-delete="${task.id}">Dzēst</button>
+        ${task.canEdit ? `<button class="secondary small" data-edit="${task.id}">Labot</button>` : ''}
+        ${task.canDelete ? `<button class="danger small" data-delete="${task.id}">Dzēst</button>` : ''}
       </div>` : ''}
     </li>`;
 }
