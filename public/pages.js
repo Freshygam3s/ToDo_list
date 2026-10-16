@@ -223,11 +223,24 @@ async function projectPage(id) {
     projectDialog.showModal();
   });
 
-  main.querySelector('#delete-project').addEventListener('click', async () => {
-    if (!confirm(`Dzēst projektu "${project.name}" kopā ar visiem tā uzdevumiem?`)) return;
-    await api('DELETE', `/projects/${project.id}`);
-    showMessage('Projekts dzēsts.');
-    location.hash = '#/projekti';
+  main.querySelector('#delete-project').addEventListener('click', () => {
+    const dialog = document.querySelector('#project-delete-dialog');
+    const errorBox = document.querySelector('#project-delete-error');
+    document.querySelector('#project-delete-name').textContent = `"${project.name}"`;
+    errorBox.textContent = '';
+
+    document.querySelector('#confirm-project-delete').onclick = async () => {
+      try {
+        await api('DELETE', `/projects/${project.id}`);
+        dialog.close();
+        showMessage('Projekts dzēsts.');
+        location.hash = '#/projekti';
+      } catch (error) {
+        errorBox.textContent = error.message;
+      }
+    };
+
+    dialog.showModal();
   });
 
   const inviteForm = main.querySelector('#invite');
